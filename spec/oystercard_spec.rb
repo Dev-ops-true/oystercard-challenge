@@ -27,7 +27,24 @@ describe Oystercard do
 
     it 'deducts the fare from my balance' do
     expect{subject.deduct 10}.to change{ subject.balance }.by(-10)
-    endß
+    end
   end
 
+describe 'Oystercard status (in_journey,touch_in or touch_out)' do
+  
+  it 'is suppose to not be in journey' do
+    expect(subject).not_to be_in_journey   
+  end
+
+    it 'is suppose to be touch_in' do
+    subject.touch_in
+    expect(subject).to be_in_journey
+  end
+
+  it 'is suppose to be touch_out' do
+    subject.touch_in
+    subject.touch_out
+    expect(subject).not_to be_in_journey
+  end
+end
 end
