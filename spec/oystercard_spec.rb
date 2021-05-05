@@ -31,20 +31,11 @@ describe Oystercard do
 
 describe 'Oystercard status (in_journey,touch_in or touch_out)' do
   
-  it 'is suppose to not be in journey' do
-    expect(subject).not_to be_in_journey   
-  end
   
   it 'is suppose to be touch_in' do
     subject.top_up(50)
     subject.touch_in(touchin_station)
     expect(subject).to be_in_journey
-  end
-
-  it 'Saves the entry station' do
-    subject.top_up(50)
-    subject.touch_in(touchin_station)
-    expect(subject.entry_station).to eq(touchin_station)
   end
 
   it 'Error when insufficient funds' do
@@ -69,7 +60,7 @@ end
     subject.top_up(50)
     subject.touch_in(touchin_station)
     subject.touch_out(touchout_station)
-    expect(subject.entry_station).to eq(nil)
+    expect(subject.journey).to eq(nil)
   end  
 
   it 'Reduces the fare from the balance' do

@@ -28,6 +28,17 @@ describe Journey do
       let(:station2) { double(name: "Holland Park", zone: 2)}
 
       
+      before do
+        subject.finish(station2)
+      end
+
+      it 'Calculates a fare' do
+        expect(subject.fare).to eq(1)
+      end
+
+      it 'Knows if a journey is complete' do
+        expect(subject).to be_complete
+      end
     end
   end
 end
