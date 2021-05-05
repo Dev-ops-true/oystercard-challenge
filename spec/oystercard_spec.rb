@@ -27,27 +27,40 @@ describe 'Oystercard status (in_journey,touch_in or touch_out)' do
   it 'is suppose to not be in journey' do
     expect(subject).not_to be_in_journey   
   end
-
+  let(:station) {double("station", :name => "Victoria")}
     it 'is suppose to be touch_in' do
     subject.top_up(50)
-    subject.touch_in
+    subject.touch_in(station)
     expect(subject).to be_in_journey
   end
 
+  it 'Saves the entry station' do
+    subject.top_up(50)
+    subject.touch_in(station)
+    expect(subject.entry_station).to eq(station)
+  end
+
   it 'Error when insufficient funds' do
-    expect { subject.touch_in }.to raise_error "You have insufficient funds"
+    expect { subject.touch_in(station) }.to raise_error "You have insufficient funds"
 end
 
   it 'is suppose to be touch_out' do
     subject.top_up(50)
-    subject.touch_in
+    subject.touch_in(station)
     subject.touch_out
     expect(subject).not_to be_in_journey
   end
 
+  it 'CHanges the entry station on touch out to nil' do
+    subject.top_up(50)
+    subject.touch_in(station)
+    subject.touch_out
+    expect(subject.entry_station).to eq(nil)
+  end  
+
   it 'Reduces the fare from the balance' do
     subject.top_up(50)
-    subject.touch_in
+    subject.touch_in(station)
     expect{ subject.touch_out }.to change{subject.balance}.by(-Oystercard::MINIMUM_FARE)
   end
 
