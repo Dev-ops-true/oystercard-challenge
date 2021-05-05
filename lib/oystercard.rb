@@ -1,5 +1,7 @@
 class Oystercard
 
+    MINIMUM_FARE = 1
+
     MAXIMUM_BALANCE = 90
 
     attr_reader :balance
@@ -24,11 +26,23 @@ class Oystercard
     end
 
     def touch_in
-       @status = true
+      fail "You have insufficient funds" if check_balance
+      @status = true
+    end
+
+    def check_balance
+      @balance < MINIMUM_FARE 
     end
 
     def touch_out
-        @status = false
+      deduct
+      @status = false
+    end
+
+    private
+
+    def deduct(amount = MINIMUM_FARE)
+      @balance -= amount
     end
 
 end

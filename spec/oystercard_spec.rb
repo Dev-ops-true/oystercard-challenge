@@ -21,14 +21,6 @@ describe Oystercard do
     end
 
   end
-  describe '#deduct' do
-
-    it { is_expected.to respond_to(:deduct).with(1).argument }
-
-    it 'deducts the fare from my balance' do
-    expect{subject.deduct 10}.to change{ subject.balance }.by(-10)
-    end
-  end
 
 describe 'Oystercard status (in_journey,touch_in or touch_out)' do
   
@@ -37,14 +29,27 @@ describe 'Oystercard status (in_journey,touch_in or touch_out)' do
   end
 
     it 'is suppose to be touch_in' do
+    subject.top_up(50)
     subject.touch_in
     expect(subject).to be_in_journey
   end
 
+  it 'Error when insufficient funds' do
+    expect { subject.touch_in }.to raise_error "You have insufficient funds"
+end
+
   it 'is suppose to be touch_out' do
+    subject.top_up(50)
     subject.touch_in
     subject.touch_out
     expect(subject).not_to be_in_journey
   end
+
+  it 'Reduces the fare from the balance' do
+    subject.top_up(50)
+    subject.touch_in
+    expect{ subject.touch_out }.to change{subject.balance}.by(-Oystercard::MINIMUM_FARE)
+  end
+
 end
-end
+end 
