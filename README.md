@@ -85,3 +85,4 @@ I need to have the correct fare calculated
 
 
 ## Credits
+* Maria Valero (Day 1)
