@@ -1,52 +1,54 @@
+# frozen_string_literal: true
+
 require_relative 'journey'
 require_relative 'station'
 
 class Oystercard
+  MINIMUM_FARE = 1
 
-    MINIMUM_FARE = 1
+  MAXIMUM_BALANCE = 90
 
-    MAXIMUM_BALANCE = 90
+  attr_reader :balance, :journey_history, :journey
 
-    attr_reader :balance, :journey_history, :journey
+  def initialize
+    @balance = 0
+    @journey_history = []
+  end
 
-    def initialize
-      @balance = 0
-      @journey_history = []
+  def top_up(amount)
+    raise "You cannot exceed #{MAXIMUM_BALANCE}" if amount + @balance > MAXIMUM_BALANCE
+
+    @balance += amount
+  end
+
+  def in_journey?
+    if @journey.nil? || @journey.complete?
+      false
+    else
+      true
     end
+  end
 
-    def top_up(amount)
-      fail "You cannot exceed #{MAXIMUM_BALANCE}" if amount + @balance > MAXIMUM_BALANCE
-      @balance += amount
-    end
+  def touch_in(station)
+    raise 'You have insufficient funds' if check_balance
 
-    def in_journey?
-      if @journey == nil || @journey.complete?
-        false
-      else
-        true
-      end
-    end
+    @journey = Journey.new(station)
+  end
 
-    def touch_in(station)
-      fail "You have insufficient funds" if check_balance
-      @journey = Journey.new(station)
-    end
+  def check_balance
+    @balance < MINIMUM_FARE
+  end
 
-    def check_balance
-      @balance < MINIMUM_FARE 
-    end
+  def touch_out(station)
+    @journey.finish(station)
+    deduct(@journey.fare)
+    @journey_history << { start: @journey.entry_station, finish: @journey.exit_station }
+    @journey = nil
+  end
 
-    def touch_out(station)
-      @journey.finish(station)
-      deduct(@journey.fare)
-      @journey_history << { start: @journey.entry_station, finish: @journey.exit_station }
-      @journey = nil
-    end
+  private
 
-    private
-
-    def deduct(amount)
-      @balance -= amount
-    end
-
+  def deduct(amount)
+    @balance -= amount
+  end
 end

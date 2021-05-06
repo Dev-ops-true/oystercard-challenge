@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Journey
   PENALTY_FARE = 6
   attr_reader :entry_station, :exit_station
@@ -7,12 +9,11 @@ class Journey
   end
 
   def complete?
-    @entry_station != nil && @exit_station != nil
+    !@entry_station.nil? && !@exit_station.nil?
   end
 
   def fare
-    @entry_station != nil && @exit_station != nil ? 1 : 6
-    
+    !@entry_station.nil? && !@exit_station.nil? ? 1 : 6
   end
 
   def finish(station = nil)
