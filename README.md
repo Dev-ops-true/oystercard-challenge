@@ -86,3 +86,5 @@ I need to have the correct fare calculated
 
 ## Credits
 * Maria Valero (Day 1)
+* Willoughby Hood (day 2)
+* Becca (Day 3)
